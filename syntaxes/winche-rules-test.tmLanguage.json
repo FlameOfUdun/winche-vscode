@@ -1,0 +1,282 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Winche Rule Tests",
+  "scopeName": "source.winche-rules-test",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#test"
+    },
+    {
+      "include": "#check"
+    },
+    {
+      "include": "#doc-key"
+    },
+    {
+      "include": "#setup"
+    },
+    {
+      "include": "#value"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.double-slash.winche",
+      "match": "(//).*$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.comment.winche"
+        }
+      }
+    },
+    "string-single": {
+      "name": "string.quoted.single.winche",
+      "begin": "'",
+      "end": "'|$",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.winche"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.winche"
+        }
+      },
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.winche"
+        }
+      ]
+    },
+    "string-double": {
+      "name": "string.quoted.double.winche",
+      "begin": "\"",
+      "end": "\"|$",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.winche"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.winche"
+        }
+      },
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.winche"
+        }
+      ]
+    },
+    "number": {
+      "match": "(?<![\\w.])-?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?\\b",
+      "name": "constant.numeric.winche"
+    },
+    "constant": {
+      "match": "\\b(true|false|null)\\b",
+      "name": "constant.language.winche"
+    },
+    "quoted-name": {
+      "match": "`[^`\\n]*`",
+      "name": "variable.other.quoted.winche"
+    },
+    "path": {
+      "patterns": [
+        {
+          "match": "(\\{)([A-Za-z_]\\w*)(=\\*\\*)?(\\})",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.capture.begin.winche"
+            },
+            "2": {
+              "name": "variable.parameter.capture.winche"
+            },
+            "3": {
+              "name": "keyword.operator.wildcard.winche"
+            },
+            "4": {
+              "name": "punctuation.definition.capture.end.winche"
+            }
+          }
+        },
+        {
+          "match": "/",
+          "name": "punctuation.separator.path.winche"
+        },
+        {
+          "match": "[^/{}\\s]+",
+          "name": "string.unquoted.path.winche"
+        }
+      ]
+    },
+    "test": {
+      "match": "\\b(test)\\s+(\"[^\"\\n]*\"|'[^'\\n]*')",
+      "captures": {
+        "1": {
+          "name": "keyword.control.test.winche"
+        },
+        "2": {
+          "name": "entity.name.function.test.winche"
+        }
+      }
+    },
+    "check": {
+      "begin": "\\b(allow|deny)\\s+(get|list|create|update|delete)\\b(?:\\s+(group)\\b)?(?:\\s+((?:\\{[^}\\s]*\\}|[^\\s{}:])+))?",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.expect.winche"
+        },
+        "2": {
+          "name": "storage.modifier.operation.winche"
+        },
+        "3": {
+          "name": "keyword.other.group.winche"
+        },
+        "4": {
+          "patterns": [
+            {
+              "include": "#path"
+            }
+          ]
+        }
+      },
+      "end": "$",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "match": "\\b(with)\\b",
+          "name": "keyword.other.with.winche"
+        },
+        {
+          "match": "\\b(where)\\b",
+          "name": "keyword.other.where.winche"
+        },
+        {
+          "match": "(?<=\\bwhere\\s|&&\\s|\\bwhere|&&)\\s*([A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*)",
+          "captures": {
+            "1": {
+              "name": "variable.other.property.winche"
+            }
+          }
+        },
+        {
+          "match": "&&",
+          "name": "keyword.operator.logical.winche"
+        },
+        {
+          "match": "==|!=|<=|>=|<|>",
+          "name": "keyword.operator.comparison.winche"
+        },
+        {
+          "include": "#value"
+        },
+        {
+          "include": "#punctuation"
+        }
+      ]
+    },
+    "doc-key": {
+      "match": "^\\s*((?:[^\\s{}:/'\"]+/)+[^\\s{}:/'\"]*)\\s*(:)",
+      "captures": {
+        "1": {
+          "patterns": [
+            {
+              "include": "#path"
+            }
+          ]
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.winche"
+        }
+      }
+    },
+    "setup": {
+      "patterns": [
+        {
+          "match": "\\b(documents|auth|resource|time)\\b",
+          "name": "keyword.other.setup.winche"
+        },
+        {
+          "match": "\\b(none)\\b",
+          "name": "constant.language.none.winche"
+        }
+      ]
+    },
+    "value": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#string-single"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#quoted-name"
+        },
+        {
+          "include": "#constant"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "match": "\\b(timestamp|path|bytes)(?=\\s*\\()",
+          "name": "support.function.winche"
+        },
+        {
+          "match": "\\b([A-Za-z_]\\w*)\\s*(:)",
+          "captures": {
+            "1": {
+              "name": "variable.other.property.winche"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.winche"
+            }
+          }
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "match": ";",
+          "name": "punctuation.terminator.statement.winche"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.comma.winche"
+        },
+        {
+          "match": "\\.",
+          "name": "punctuation.accessor.winche"
+        },
+        {
+          "match": "[{}]",
+          "name": "punctuation.section.block.winche"
+        },
+        {
+          "match": "[\\[\\]]",
+          "name": "punctuation.section.brackets.winche"
+        },
+        {
+          "match": "[()]",
+          "name": "punctuation.section.parens.winche"
+        }
+      ]
+    }
+  }
+}

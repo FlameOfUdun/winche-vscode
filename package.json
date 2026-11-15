@@ -1,0 +1,128 @@
+{
+  "name": "winche",
+  "displayName": "Winche Rules",
+  "description": "Winche access rules in VS Code: syntax colours, suggestions, errors as you type, formatting and live rule tests for .rules and .rules.test files.",
+  "version": "0.1.0",
+  "publisher": "FlameOfUdun",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FlameOfUdun/winche-vscode"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Formatters",
+    "Testing"
+  ],
+  "keywords": [
+    "winche",
+    "security rules",
+    "rules",
+    "access control"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "languages": [
+      {
+        "id": "winche-rules",
+        "aliases": [
+          "Winche Rules",
+          "winche-rules"
+        ],
+        "extensions": [
+          ".rules"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "winche-rules-test",
+        "aliases": [
+          "Winche Rule Tests",
+          "winche-rules-test"
+        ],
+        "filenamePatterns": [
+          "*.rules.test"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "winche-rules",
+        "scopeName": "source.winche-rules",
+        "path": "./syntaxes/winche-rules.tmLanguage.json"
+      },
+      {
+        "language": "winche-rules-test",
+        "scopeName": "source.winche-rules-test",
+        "path": "./syntaxes/winche-rules-test.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "winche.rules.test",
+        "title": "Run Rule Tests",
+        "category": "Winche"
+      },
+      {
+        "command": "winche.rules.validate",
+        "title": "Validate Rules",
+        "category": "Winche"
+      },
+      {
+        "command": "winche.restartServer",
+        "title": "Restart Language Server",
+        "category": "Winche"
+      },
+      {
+        "command": "winche.openGuide",
+        "title": "Open Rules Language Guide",
+        "category": "Winche"
+      }
+    ],
+    "configuration": {
+      "title": "Winche",
+      "properties": {
+        "winche.cli.path": {
+          "type": "string",
+          "default": "winche",
+          "markdownDescription": "The `winche` CLI (install with `dotnet tool install -g Winche.Cli`). It runs the language server: errors as you type, test results and formatting."
+        },
+        "winche.cli.args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Arguments before `lsp`, e.g. `[\"path/to/winche.dll\"]` with `winche.cli.path` set to `dotnet`."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js --sourcemap",
+    "watch": "npm run build -- --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "vscode:prepublish": "npm run typecheck && npm run build -- --minify",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.3.2"
+  }
+}
