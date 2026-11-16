@@ -234,7 +234,7 @@
           "include": "#number"
         },
         {
-          "match": "\\b(timestamp|path|bytes)(?=\\s*\\()",
+          "match": "\\b(timestamp|path|bytes|fileReference|userReference|geoPoint)(?=\\s*\\()",
           "name": "support.function.winche"
         },
         {

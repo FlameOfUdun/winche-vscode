@@ -160,7 +160,10 @@ export function suggestTest(ctx: TestContext, patterns: string[]): TestSuggestio
       return [
         { label: "true", kind: "keyword" }, { label: "false", kind: "keyword" }, { label: "null", kind: "keyword" },
         { label: "timestamp", snippet: "timestamp('${1:2026-01-01T00:00:00Z}')", kind: "function", detail: "a timestamp" },
-        { label: "path", snippet: "path('${1}')", kind: "function", detail: "a path value" },
+        { label: "path", snippet: "path('${1}')", kind: "function", detail: "a documentReference" },
+        { label: "fileReference", snippet: "fileReference('${1}')", kind: "function", detail: "a file, by its path" },
+        { label: "userReference", snippet: "userReference('${1}')", kind: "function", detail: "a user, by uid" },
+        { label: "geoPoint", snippet: "geoPoint(${1:51.5}, ${2:-0.12})", kind: "function", detail: "a latitude and longitude" },
         { label: "bytes", snippet: "bytes('${1}')", kind: "function", detail: "base64 bytes" },
       ];
   }

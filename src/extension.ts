@@ -147,7 +147,7 @@ const KEYWORDS: Record<string, string> = {
   let: "`let name = value;` — a name for a value inside a function, usable in the lines after it.",
   return: "`return condition;` — what a function gives; its last line.",
   in: "`x in list` — the list contains x; `key in map` — the map has that key",
-  is: "Type check: `x is string` (string int float number bool null map list timestamp bytes path)",
+  is: "Type check: `x is string` (string integer double number boolean null map array timestamp bytes documentReference fileReference userReference geoPoint)",
   not: "`x not in list` — the same as `!(x in list)`",
   has: "`map has only [...]` / `has all [...]` / `has any [...]` — about the map's keys: a document's fields, a token's claims. Shorthand for `map.keys().hasOnly([...])` (`hasAll`, `hasAny`).",
   changes: "`changes only [...]` / `changes all [...]` / `changes any [...]` — the fields an update changes. Shorthand for `request.resource.data.diff(resource.data).affectedKeys().hasOnly([...])` (`hasAll`, `hasAny`).",
@@ -203,7 +203,9 @@ const TEST_KEYWORDS: Record<string, string> = {
   none: "`auth none` — a signed-out caller (`request.auth == null`).",
   get: "**get** — read one document", list: "**list** — query a collection", create: "**create** — write a new document",
   update: "**update** — change a document", delete: "**delete** — remove a document",
-  timestamp: "`timestamp('2026-01-01T00:00:00Z')` — a timestamp value", path: "`path('users/u1')` — a path value", bytes: "`bytes('base64')` — a bytes value",
+  timestamp: "`timestamp('2026-01-01T00:00:00Z')` — a timestamp value", path: "`path('users/u1')` — a documentReference", bytes: "`bytes('base64')` — a bytes value",
+  fileReference: "`fileReference('scans/a.png')` — a file, by its path", userReference: "`userReference('u1')` — a user, by uid",
+  geoPoint: "`geoPoint(51.5, -0.12)` — a latitude (-90 to 90) and longitude (-180 to 180)",
 };
 
 function testHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
