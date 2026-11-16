@@ -43,18 +43,18 @@ export const OPERATIONS: Suggestion[] = [
 ];
 
 export const METHODS: Suggestion[] = [
-  { label: "keys", insert: "keys()", type: "method", detail: "map → list", info: "The map's keys, e.g. request.resource.data.keys().hasOnly(['name'])" },
-  { label: "hasOnly", insert: "hasOnly([])", type: "method", detail: "list → bool", info: "Every element is one of the listed values" },
-  { label: "hasAll", insert: "hasAll([])", type: "method", detail: "list → bool", info: "Contains every listed value" },
-  { label: "hasAny", insert: "hasAny([])", type: "method", detail: "list → bool", info: "Contains at least one listed value" },
+  { label: "keys", insert: "keys()", type: "method", detail: "map → array", info: "The map's keys, e.g. request.resource.data.keys().hasOnly(['name'])" },
+  { label: "hasOnly", insert: "hasOnly([])", type: "method", detail: "array → boolean", info: "Every element is one of the listed values" },
+  { label: "hasAll", insert: "hasAll([])", type: "method", detail: "array → boolean", info: "Contains every listed value" },
+  { label: "hasAny", insert: "hasAny([])", type: "method", detail: "array → boolean", info: "Contains at least one listed value" },
   { label: "diff", insert: "diff()", type: "method", detail: "map → diff", info: "How this map differs from another: request.resource.data.diff(resource.data)" },
-  { label: "affectedKeys", insert: "affectedKeys()", type: "method", detail: "diff → list", info: "Keys added, removed or changed" },
-  { label: "addedKeys", insert: "addedKeys()", type: "method", detail: "diff → list" },
-  { label: "removedKeys", insert: "removedKeys()", type: "method", detail: "diff → list" },
-  { label: "changedKeys", insert: "changedKeys()", type: "method", detail: "diff → list" },
-  { label: "unchangedKeys", insert: "unchangedKeys()", type: "method", detail: "diff → list" },
-  { label: "size", insert: "size()", type: "method", detail: "string/list/map → int", info: "Length" },
-  { label: "matches", insert: "matches('')", type: "method", detail: "string → bool", info: "The whole string matches the regex" },
+  { label: "affectedKeys", insert: "affectedKeys()", type: "method", detail: "diff → array", info: "Keys added, removed or changed" },
+  { label: "addedKeys", insert: "addedKeys()", type: "method", detail: "diff → array" },
+  { label: "removedKeys", insert: "removedKeys()", type: "method", detail: "diff → array" },
+  { label: "changedKeys", insert: "changedKeys()", type: "method", detail: "diff → array" },
+  { label: "unchangedKeys", insert: "unchangedKeys()", type: "method", detail: "diff → array" },
+  { label: "size", insert: "size()", type: "method", detail: "string/array/map → integer", info: "Length" },
+  { label: "matches", insert: "matches('')", type: "method", detail: "string → boolean", info: "The whole string matches the regex" },
   { label: "lower", insert: "lower()", type: "method", detail: "string → string" },
   { label: "upper", insert: "upper()", type: "method", detail: "string → string" },
   { label: "get", insert: "get('', null)", type: "method", detail: "map → value", info: "The value at a key, or a default when it's missing" },
@@ -63,11 +63,11 @@ export const METHODS: Suggestion[] = [
 export const GLOBALS: Suggestion[] = [
   { label: "request", type: "variable", detail: "the request", info: "request.auth, request.resource, request.time, request.method" },
   { label: "resource", type: "variable", detail: "the existing document", info: "Its fields (resource.name or resource.data.name) and id, path, version…" },
-  { label: "exists", insert: "exists()", type: "function", detail: "path → bool", info: "Whether a document exists: exists(/projects/$(projectId)/members/$(request.auth.uid))" },
-  { label: "get", insert: "get()", type: "function", detail: "path → document", info: "Read another document: get(/users/$(request.auth.uid)).role — each $( ) is one path segment" },
-  { label: "size", insert: "size()", type: "function", detail: "string/list/map → int" },
+  { label: "exists", insert: "exists()", type: "function", detail: "documentReference → boolean", info: "Whether a document exists: exists(/projects/$(projectId)/members/$(request.auth.uid))" },
+  { label: "get", insert: "get()", type: "function", detail: "documentReference → document", info: "Read another document: get(/users/$(request.auth.uid)).role — each $( ) is one path segment" },
+  { label: "size", insert: "size()", type: "function", detail: "string/array/map → integer" },
   { label: "timestamp", insert: "timestamp('')", type: "function", detail: "ISO-8601 → timestamp" },
-  { label: "path", insert: "path('')", type: "function", detail: "parts → path", info: "path('users', uid) — a path from its parts; the same as /users/$(uid)" },
+  { label: "path", insert: "path('')", type: "function", detail: "parts → documentReference", info: "path('users', uid) — a path from its parts; the same as /users/$(uid)" },
   { label: "true", type: "keyword" },
   { label: "false", type: "keyword" },
   { label: "null", type: "keyword" },
@@ -77,16 +77,16 @@ export const GLOBALS: Suggestion[] = [
 export const OPERATORS: Suggestion[] = [
   { label: "in", insert: "in ", type: "keyword", detail: "membership", info: "`x in list` — the list contains x; `key in map` — the map has that key" },
   { label: "not in", insert: "not in ", type: "keyword", detail: "not a member", info: "`x not in list` — the same as `!(x in list)`" },
-  { label: "is", insert: "is ", type: "keyword", detail: "type check", info: "`x is string` (string int float number bool null map list timestamp bytes path)" },
-  { label: "has only", insert: "has only []", type: "keyword", detail: "map → bool", info: "`request.resource.data has only ['name', 'email']` — the map has no keys but these (same as `.keys().hasOnly([...])`)" },
-  { label: "has all", insert: "has all []", type: "keyword", detail: "map → bool", info: "`m has all ['name']` — the map has every one of these keys (`.keys().hasAll([...])`)" },
-  { label: "has any", insert: "has any []", type: "keyword", detail: "map → bool", info: "`request.auth.token has any ['admin']` — the map has at least one of these keys (`.keys().hasAny([...])`)" },
-  { label: "changes only", insert: "changes only []", type: "keyword", detail: "update → bool", info: "`changes only ['name']` — the update changes no fields but these (`request.resource.data.diff(resource.data).affectedKeys().hasOnly([...])`)" },
-  { label: "changes any", insert: "changes any []", type: "keyword", detail: "update → bool", info: "`changes any ['role', 'ownerId']` — the update changes at least one of these fields (`….affectedKeys().hasAny([...])`)" },
-  { label: "changes all", insert: "changes all []", type: "keyword", detail: "update → bool", info: "`changes all ['a', 'b']` — the update changes every one of these fields (`….affectedKeys().hasAll([...])`)" },
+  { label: "is", insert: "is ", type: "keyword", detail: "type check", info: "`x is string` (string integer double number boolean null map array timestamp bytes documentReference fileReference userReference geoPoint)" },
+  { label: "has only", insert: "has only []", type: "keyword", detail: "map → boolean", info: "`request.resource.data has only ['name', 'email']` — the map has no keys but these (same as `.keys().hasOnly([...])`)" },
+  { label: "has all", insert: "has all []", type: "keyword", detail: "map → boolean", info: "`m has all ['name']` — the map has every one of these keys (`.keys().hasAll([...])`)" },
+  { label: "has any", insert: "has any []", type: "keyword", detail: "map → boolean", info: "`request.auth.token has any ['admin']` — the map has at least one of these keys (`.keys().hasAny([...])`)" },
+  { label: "changes only", insert: "changes only []", type: "keyword", detail: "update → boolean", info: "`changes only ['name']` — the update changes no fields but these (`request.resource.data.diff(resource.data).affectedKeys().hasOnly([...])`)" },
+  { label: "changes any", insert: "changes any []", type: "keyword", detail: "update → boolean", info: "`changes any ['role', 'ownerId']` — the update changes at least one of these fields (`….affectedKeys().hasAny([...])`)" },
+  { label: "changes all", insert: "changes all []", type: "keyword", detail: "update → boolean", info: "`changes all ['a', 'b']` — the update changes every one of these fields (`….affectedKeys().hasAll([...])`)" },
 ];
 
-const TYPES = ["string", "int", "float", "number", "bool", "null", "map", "list", "timestamp", "bytes", "path"]
+const TYPES = ["string", "integer", "double", "number", "boolean", "null", "map", "array", "timestamp", "bytes", "documentReference", "fileReference", "userReference", "geoPoint"]
   .map((t): Suggestion => ({ label: t, type: "type" }));
 
 const DOCUMENT_COLUMNS: Suggestion[] = [
@@ -96,7 +96,7 @@ const DOCUMENT_COLUMNS: Suggestion[] = [
   { label: "collection", type: "property", detail: "string", info: "The id of the collection the document is in, e.g. notes" },
   { label: "createdAt", type: "property", detail: "timestamp", info: "When the document was created" },
   { label: "updatedAt", type: "property", detail: "timestamp", info: "When the document was last written" },
-  { label: "version", type: "property", detail: "int", info: "Goes up by one on every write" },
+  { label: "version", type: "property", detail: "integer", info: "Goes up by one on every write" },
 ];
 
 const STORAGE_FIELDS: Suggestion[] = [
@@ -104,10 +104,10 @@ const STORAGE_FIELDS: Suggestion[] = [
   { label: "directory", type: "property", detail: "string", info: "The folder the file is in" },
   { label: "id", type: "property", detail: "string" },
   { label: "mimeType", type: "property", detail: "string", info: "e.g. image/png" },
-  { label: "sizeBytes", type: "property", detail: "int", info: "The file's size" },
+  { label: "sizeBytes", type: "property", detail: "integer", info: "The file's size" },
   { label: "metadata", type: "property", detail: "map", info: "The file's custom metadata" },
   { label: "uploadStatus", type: "property", detail: "string", info: "pending or complete" },
-  { label: "version", type: "property", detail: "int" },
+  { label: "version", type: "property", detail: "integer" },
   { label: "createdAt", type: "property", detail: "timestamp" },
   { label: "updatedAt", type: "property", detail: "timestamp" },
 ];
@@ -127,7 +127,7 @@ const AUTH: Suggestion[] = [
 const TOKEN: Suggestion[] = [
   { label: "sub", type: "property", detail: "string", info: "The subject — the user's id in Keycloak" },
   { label: "email", type: "property", detail: "string", info: "The user's email address" },
-  { label: "email_verified", type: "property", detail: "bool", info: "Whether the email address is verified" },
+  { label: "email_verified", type: "property", detail: "boolean", info: "Whether the email address is verified" },
   { label: "name", type: "property", detail: "string", info: "The user's full name" },
   { label: "preferred_username", type: "property", detail: "string", info: "The user's username" },
 ];

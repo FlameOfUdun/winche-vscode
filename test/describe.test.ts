@@ -31,9 +31,9 @@ group("hover follows the dotted chain", () => {
   });
 
   it("knows methods, globals and path captures", () => {
-    expect(hover(rule("request.resource.data.keys().hasOn|ly(['a'])"))?.detail).toBe("list → bool");
-    expect(hover(rule("request.resource.data.ke|ys().size() < 3"))?.detail).toBe("map → list");
-    expect(hover(rule("exis|ts(path('teams/t1'))"))?.detail).toBe("path → bool");
+    expect(hover(rule("request.resource.data.keys().hasOn|ly(['a'])"))?.detail).toBe("array → boolean");
+    expect(hover(rule("request.resource.data.ke|ys().size() < 3"))?.detail).toBe("map → array");
+    expect(hover(rule("exis|ts(path('teams/t1'))"))?.detail).toBe("documentReference → boolean");
     expect(hover(rule("reque|st.auth != null"))?.detail).toBe("the request");
     expect(hover(rule("request.auth.uid == u|id"))?.detail).toBe("path capture");
     expect(hover(rule("request.auth.uid == u|id"))?.info).toContain("users/{uid}");

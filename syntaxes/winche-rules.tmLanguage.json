@@ -220,7 +220,7 @@
           "name": "keyword.control.conditional.winche"
         },
         {
-          "match": "\\b(is)\\s+(string|int|float|number|bool|null|map|list|timestamp|bytes|path)\\b",
+          "match": "\\b(is)\\s+(string|integer|double|number|boolean|null|map|array|timestamp|bytes|documentReference|fileReference|userReference|geoPoint)\\b",
           "captures": {
             "1": {
               "name": "keyword.operator.expression.is.winche"

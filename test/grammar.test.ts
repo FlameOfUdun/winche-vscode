@@ -52,7 +52,7 @@ match users/{uid}/files/{rest=**} {
   allow read, write: if request.auth.uid == uid
     && request.auth.token.role in ['admin', "staff"]
     && request.resource.data.keys().hasOnly(['name'])
-    && resource.size is int
+    && resource.size is integer
     && !(resource.public == true) && exists(path('teams/t1'));
   allow get;
 }`;
@@ -76,7 +76,7 @@ match users/{uid}/files/{rest=**} {
   it("colours in and is as keywords, and the type after is", () => {
     expect(scopeOf(rules, src, "in")).toBe("keyword.operator.expression.in.winche");
     expect(scopeOf(rules, src, "is")).toBe("keyword.operator.expression.is.winche");
-    expect(scopeOf(rules, src, "int")).toBe("support.type.primitive.winche");
+    expect(scopeOf(rules, src, "integer")).toBe("support.type.primitive.winche");
   });
 
   it("tells variables, properties, methods and functions apart", () => {
