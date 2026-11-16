@@ -30,7 +30,7 @@ Colours, suggestions and hover work on their own. Errors, test results, formatti
 come from the Winche CLI's language server:
 
 ```sh
-dotnet tool install -g Winche.Cli     # 1.1.0 or later
+dotnet tool install -g Winche.Cli     # 2.0.0 or later
 ```
 
 If `winche` isn't on your `PATH`, set **`winche.cli.path`** (and `winche.cli.args`, e.g. `dotnet` +
