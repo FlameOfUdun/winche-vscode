@@ -1,8 +1,8 @@
 {
   "name": "winche",
-  "displayName": "Winche Rules",
-  "description": "Winche access rules in VS Code: syntax colours, suggestions, errors as you type, formatting and live rule tests for .rules and .rules.test files.",
-  "version": "0.1.0",
+  "displayName": "Winche",
+  "description": "Winche in VS Code: access rules (.rules, .rules.test) with colours, suggestions, errors as you type, formatting and live tests; and functions set up with Deno so @winche/functions resolves.",
+  "version": "0.2.0",
   "publisher": "FlameOfUdun",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -19,13 +19,17 @@
     "Testing"
   ],
   "keywords": [
-    "winche",
-    "security rules",
+    "access control",
+    "deno",
+    "functions",
     "rules",
-    "access control"
+    "security rules",
+    "winche"
   ],
   "main": "./dist/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:**/winche.json"
+  ],
   "contributes": {
     "languages": [
       {
@@ -83,6 +87,11 @@
         "command": "winche.openGuide",
         "title": "Open Rules Language Guide",
         "category": "Winche"
+      },
+      {
+        "command": "winche.functions.setup",
+        "title": "Set up functions in this editor",
+        "category": "Winche"
       }
     ],
     "configuration": {
@@ -100,6 +109,11 @@
           },
           "default": [],
           "markdownDescription": "Arguments before `lsp`, e.g. `[\"path/to/winche.dll\"]` with `winche.cli.path` set to `dotnet`."
+        },
+        "winche.functions.setUpDeno": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Offer to install the Deno extension and turn Deno on for the functions folder named in `winche.json` (only that folder: `deno.enablePaths`), so `@winche/functions` resolves."
         }
       }
     }
@@ -120,9 +134,15 @@
     "@types/vscode": "^1.90.0",
     "@vscode/vsce": "^3.2.0",
     "esbuild": "^0.24.0",
+    "ovsx": "^0.10.1",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0",
     "vscode-oniguruma": "^2.0.1",
     "vscode-textmate": "^9.3.2"
+  },
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#13294B",
+    "theme": "dark"
   }
 }

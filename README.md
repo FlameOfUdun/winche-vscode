@@ -1,4 +1,4 @@
-# Winche Rules for VS Code
+# Winche for VS Code
 
 Edit [Winche](https://github.com/FlameOfUdun) access rules with the help you'd expect: colours, suggestions,
 errors as you type, formatting, and rule tests that run while you edit.
@@ -22,6 +22,13 @@ test "owners read their profile" {
 }
 ```
 
+- **Functions**: Winche functions are TypeScript run by Deno, and `@winche/functions` resolves through the functions
+  folder's `deno.json`, which only the [Deno extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
+  reads. When a `winche.json` names a functions folder, this extension offers to install the Deno extension and to
+  turn Deno on for **that folder only** (`deno.enablePaths` in the workspace settings), so the rest of the
+  repository keeps its own TypeScript setup. Turn the offer off with `winche.functions.setUpDeno`; run it again with
+  **Winche: Set up functions in this editor**.
+
 New to the rules language? Read the **[Rules Language Guide](https://github.com/FlameOfUdun/winche-rules/blob/main/GUIDE.md)**.
 
 ## Requirements
@@ -42,6 +49,7 @@ If `winche` isn't on your `PATH`, set **`winche.cli.path`** (and `winche.cli.arg
 - **Winche: Validate Rules** — `winche rules validate`, the same way
 - **Winche: Restart Language Server**
 - **Winche: Open Rules Language Guide** — the guide in your browser
+- **Winche: Set up functions in this editor** — the Deno extension, and Deno on for the functions folder
 
 Tests pair with rules files through `winche.json` (`"tests": { "database": "database.rules.test" }`), or by
 name: `X.rules.test` tests `X.rules`. See the [CLI](https://github.com/FlameOfUdun/winche-cli) for the test
@@ -56,8 +64,11 @@ npm run build     # dist/extension.js
 npm run package   # winche-<version>.vsix  →  code --install-extension winche-<version>.vsix
 ```
 
-Press F5 in VS Code with this folder open to try it in an Extension Development Host. Releases: push a `v*`
-tag; GitHub Actions publishes to the Marketplace (needs the `VSCE_PAT` secret).
+Press F5 in VS Code with this folder open to try it in an Extension Development Host. Releases: push a `v*` tag
+matching `version` in package.json; GitHub Actions tests, packages one `.vsix`, and publishes it to the VS Code
+Marketplace (secret `VSCE_PAT`: an Azure DevOps token with Marketplace → Manage, for the publisher `FlameOfUdun`)
+and to Open VSX for Cursor, VSCodium and others (secret `OVSX_PAT`: an open-vsx.org token, with the `FlameOfUdun`
+namespace created there once).
 
 ## License
 

@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { LanguageClient, LanguageClientOptions, ServerOptions, State } from "vscode-languageclient/node";
 import { analyze, definedFunctions, describe, FieldInfo, OPERATIONS, RuleSubsystem, suggest, Suggestion } from "./rulesCompletion";
 import { analyzeTest, matchPatterns, suggestTest, TestSuggestion } from "./testCompletion";
+import { denoCovers, functionsFolder, relativeTo, withFolder } from "./functionsSetup";
 
 const RULES = "winche-rules";
 const GUIDE = "https://github.com/FlameOfUdun/winche-rules/blob/main/GUIDE.md";
@@ -24,8 +25,67 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.workspace.onDidChangeConfiguration(async (e) => {
       if (e.affectsConfiguration("winche.cli")) { await stopServer(); await startServer(context); }
     }),
+    vscode.commands.registerCommand("winche.functions.setup", () => setUpFunctions(context, true)),
   );
+  void setUpFunctions(context, false);
   await startServer(context);
+}
+
+// ----- functions: Deno for the functions folder ---------------------------------------------------
+
+const DENO = "denoland.vscode-deno";
+let askedThisSession = false;
+
+/**
+ * Winche functions are TypeScript run by Deno: `@winche/functions` resolves through the folder's deno.json, which only
+ * the Deno extension reads. For each winche.json naming a functions folder, offers to install that extension and to
+ * turn Deno on for that folder only (deno.enablePaths), so the rest of the repository keeps its own TypeScript setup.
+ * `asked`: from the command (always asks, even after "Never").
+ */
+async function setUpFunctions(context: vscode.ExtensionContext, asked: boolean): Promise<void> {
+  if (!asked && (askedThisSession || !vscode.workspace.getConfiguration("winche.functions").get<boolean>("setUpDeno", true))) return;
+  const found: { root: vscode.WorkspaceFolder; folder: string }[] = [];
+  for (const file of await vscode.workspace.findFiles("**/winche.json", "**/node_modules/**", 20)) {
+    const root = vscode.workspace.getWorkspaceFolder(file);
+    const named = functionsFolder(Buffer.from(await vscode.workspace.fs.readFile(file)).toString("utf8"));
+    if (!root || !named) continue;
+    const folder = relativeTo(root.uri.fsPath, path.join(path.dirname(file.fsPath), named));
+    if (folder && folder !== ".") found.push({ root, folder });
+  }
+  if (found.length === 0) {
+    if (asked) void vscode.window.showInformationMessage("Winche: no winche.json here names a functions folder.");
+    return;
+  }
+  askedThisSession = true;
+  if (!vscode.extensions.getExtension(DENO)) {
+    const install = "Install Deno extension";
+    const choice = await vscode.window.showInformationMessage(
+      "Winche functions are TypeScript run by Deno. Install the Deno extension so the editor resolves @winche/functions and checks them?",
+      install, "Not now", "Never");
+    if (choice === "Never") return never();
+    if (choice !== install) return;
+    await vscode.commands.executeCommand("workbench.extensions.installExtension", DENO);
+  }
+  for (const { root, folder } of found) {
+    const deno = vscode.workspace.getConfiguration("deno", root.uri);
+    if (denoCovers(folder, deno.get<boolean>("enable"), deno.get<string[]>("enablePaths"))) {
+      if (asked) void vscode.window.showInformationMessage(`Winche: Deno already checks ${folder}/.`);
+      continue;
+    }
+    const on = `Turn on for ${folder}/`;
+    const choice = await vscode.window.showInformationMessage(
+      `Winche: turn Deno on for ${folder}/ only? The rest of ${root.name} keeps its own TypeScript setup. (Saved in the workspace's .vscode/settings.json.)`,
+      on, "Not now", "Never");
+    if (choice === "Never") return never();
+    if (choice !== on) continue;
+    await deno.update("enablePaths", withFolder(deno.get<string[]>("enablePaths"), folder), vscode.ConfigurationTarget.WorkspaceFolder);
+  }
+  void context;
+}
+
+async function never(): Promise<void> {
+  await vscode.workspace.getConfiguration("winche.functions").update("setUpDeno", false, vscode.ConfigurationTarget.Workspace);
+  void vscode.window.showInformationMessage("Winche: won't ask again here. Run \"Winche: Set up functions in this editor\" any time.");
 }
 
 export async function deactivate(): Promise<void> {

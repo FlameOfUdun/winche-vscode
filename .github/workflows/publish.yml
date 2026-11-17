@@ -16,9 +16,23 @@ jobs:
           node-version: '20'
 
       - run: npm ci
+
+      - name: The tag matches package.json's version
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          [ "v$version" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME doesn't match version $version"; exit 1; }
+
       - run: npm test
 
+      # One package, published to both registries.
+      - run: npx vsce package --out winche.vsix
+
       - name: Publish to the VS Code Marketplace
-        run: npx vsce publish --pat "$VSCE_PAT"
+        run: npx vsce publish --packagePath winche.vsix --pat "$VSCE_PAT"
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX (Cursor, VSCodium, …)
+        run: npx ovsx publish winche.vsix --pat "$OVSX_PAT"
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
