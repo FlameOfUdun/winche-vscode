@@ -64,11 +64,15 @@ npm run build     # dist/extension.js
 npm run package   # winche-<version>.vsix  →  code --install-extension winche-<version>.vsix
 ```
 
-Press F5 in VS Code with this folder open to try it in an Extension Development Host. Releases: push a `v*` tag
-matching `version` in package.json; GitHub Actions tests, packages one `.vsix`, and publishes it to the VS Code
-Marketplace (secret `VSCE_PAT`: an Azure DevOps token with Marketplace → Manage, for the publisher `FlameOfUdun`)
-and to Open VSX for Cursor, VSCodium and others (secret `OVSX_PAT`: an open-vsx.org token, with the `FlameOfUdun`
-namespace created there once).
+Press F5 in VS Code with this folder open to try it in an Extension Development Host.
+
+**Releases:** push a `v*` tag matching `version` in package.json. GitHub Actions tests, packages one `.vsix`, and
+publishes it with **trusted publishing** (this workflow's OIDC token, no stored secrets) to:
+
+- the **VS Code Marketplace**: publisher `FlameOfUdun`, with a trusted-publishing policy for this repository and
+  `.github/workflows/publish.yml` (Marketplace → Manage publisher);
+- **Open VSX** (Cursor, VSCodium, …): namespace `FlameOfUdun`, with this repository and workflow added as a trusted
+  publisher on open-vsx.org.
 
 ## License
 

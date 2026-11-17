@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+# Trusted publishing: both registries take this workflow's OIDC token (no stored access tokens).
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -28,11 +33,7 @@ jobs:
       - run: npx vsce package --out winche.vsix
 
       - name: Publish to the VS Code Marketplace
-        run: npx vsce publish --packagePath winche.vsix --pat "$VSCE_PAT"
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx vsce publish --oidc --packagePath winche.vsix
 
       - name: Publish to Open VSX (Cursor, VSCodium, …)
-        run: npx ovsx publish winche.vsix --pat "$OVSX_PAT"
-        env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx ovsx publish winche.vsix --trusted-publishing
