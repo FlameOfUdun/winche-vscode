@@ -35,5 +35,12 @@ jobs:
       - name: Publish to the VS Code Marketplace
         run: npx vsce publish --oidc --packagePath winche.vsix
 
+      # Skipped (with a warning) until the namespace exists there: it needs the Eclipse Publisher Agreement first.
       - name: Publish to Open VSX (Cursor, VSCodium, …)
-        run: npx ovsx publish winche.vsix --trusted-publishing
+        run: |
+          publisher="$(node -p "require('./package.json').publisher")"
+          if curl -sf "https://open-vsx.org/api/$publisher" > /dev/null; then
+            npx ovsx publish winche.vsix --trusted-publishing
+          else
+            echo "::warning::Open VSX has no namespace $publisher yet: not published there."
+          fi
