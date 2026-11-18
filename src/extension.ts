@@ -37,7 +37,7 @@ const DENO = "denoland.vscode-deno";
 let askedThisSession = false;
 
 /**
- * Winche functions are TypeScript run by Deno: `@winche/functions` resolves through the folder's deno.json, which only
+ * Winche functions are TypeScript run by Deno: `@winche-technologies/winche-functions` resolves through the folder's deno.json, which only
  * the Deno extension reads. For each winche.json naming a functions folder, offers to install that extension and to
  * turn Deno on for that folder only (deno.enablePaths), so the rest of the repository keeps its own TypeScript setup.
  * `asked`: from the command (always asks, even after "Never").
@@ -60,7 +60,7 @@ async function setUpFunctions(context: vscode.ExtensionContext, asked: boolean):
   if (!vscode.extensions.getExtension(DENO)) {
     const install = "Install Deno extension";
     const choice = await vscode.window.showInformationMessage(
-      "Winche functions are TypeScript run by Deno. Install the Deno extension so the editor resolves @winche/functions and checks them?",
+      "Winche functions are TypeScript run by Deno. Install the Deno extension so the editor resolves @winche-technologies/winche-functions and checks them?",
       install, "Not now", "Never");
     if (choice === "Never") return never();
     if (choice !== install) return;

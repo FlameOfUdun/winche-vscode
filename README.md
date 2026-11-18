@@ -22,7 +22,7 @@ test "owners read their profile" {
 }
 ```
 
-- **Functions**: Winche functions are TypeScript run by Deno, and `@winche/functions` resolves through the functions
+- **Functions**: Winche functions are TypeScript run by Deno, and `@winche-technologies/winche-functions` resolves through the functions
   folder's `deno.json`, which only the [Deno extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno)
   reads. When a `winche.json` names a functions folder, this extension offers to install the Deno extension and to
   turn Deno on for **that folder only** (`deno.enablePaths` in the workspace settings), so the rest of the
